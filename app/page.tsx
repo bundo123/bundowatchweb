@@ -14,7 +14,6 @@ import {
 import Catalog from "@/components/Catalog";
 import Logo from "@/components/Logo";
 import Navbar from "@/components/Navbar";
-import WatchImage from "@/components/WatchArt";
 import WatchModal from "@/components/WatchModal";
 import { TELEGRAM_URL, WATCHES, type Watch } from "@/data/watches";
 import { EMPTY_FILTERS, type Filters } from "@/lib/filters";
@@ -25,7 +24,8 @@ import {
   generalInquiryLink,
 } from "@/lib/whatsapp";
 
-const HERO_WATCH = WATCHES[0];
+/** Reloj de la foto de portada. */
+const HERO_WATCH = WATCHES.find((w) => w.id === "rolex-datejust-41-verde-menta") ?? WATCHES[0];
 
 /** Casas relojeras disponibles bajo pedido, mostradas en el bloque de Telegram. */
 const TELEGRAM_BRANDS = [
@@ -144,11 +144,27 @@ export default function HomePage() {
 
       <main>
         {/* ============================== PORTADA ============================== */}
-        <section id="inicio" className="hero-bg overflow-hidden pt-16">
-          <div className="mx-auto grid max-w-7xl items-center gap-x-10 gap-y-6 px-5 pb-16 pt-14 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:px-8 lg:pb-24 lg:pt-20">
-            <div>
+        <section id="inicio" className="hero relative isolate flex overflow-hidden pt-16">
+          {/* Foto a sangre: ocupa toda la portada y el texto va encima. */}
+          <div aria-hidden="true" className="hero-photo absolute inset-x-0 -top-10 bottom-[auto] h-[min(56svh,30rem)] -z-10 md:h-auto md:bottom-0 md:left-[22%]">
+            <picture>
+              <source media="(min-width: 768px)" srcSet="/portada.jpg" />
+              <img
+                src="/portada-movil.jpg"
+                alt=""
+                fetchPriority="high"
+                decoding="async"
+                className="h-full w-full object-cover object-center md:object-left"
+              />
+            </picture>
+            <div className="hero-sweep" />
+          </div>
+          <div aria-hidden="true" className="hero-scrim absolute inset-0 -z-10" />
+
+          <div className="mx-auto flex w-full max-w-7xl flex-col justify-end px-5 pb-12 pt-[min(47svh,25rem)] md:justify-center md:pb-24 md:pt-20 lg:px-8">
+            <div className="max-w-[42rem]">
               <p className="eyebrow hero-in mb-6">Boutique privada · Quito, Ecuador</p>
-              <h1 className="hero-title font-serif text-[clamp(3.1rem,8vw,6.75rem)] leading-[0.98] tracking-[-0.02em]">
+              <h1 className="hero-title font-serif text-[clamp(2.9rem,7vw,6rem)] leading-[0.98] tracking-[-0.02em]">
                 {"Alta Relojería Sin Sobreprecios".split(" ").flatMap((word, i) => [
                   <span key={`${word}-${i}`} className="hero-word">
                     <span className={i >= 2 ? "italic" : undefined} style={{ animationDelay: `${1150 + i * 110}ms` }}>
@@ -158,7 +174,8 @@ export default function HomePage() {
                   " ",
                 ])}
               </h1>
-              <p className="hero-in hero-in-2 mt-7 max-w-xl text-lg leading-relaxed text-ash">
+              <span aria-hidden="true" className="hero-rule mt-7 block h-px w-24" />
+              <p className="hero-in hero-in-2 mt-7 max-w-xl text-lg leading-relaxed text-bone/80">
                 Gestión directa de piezas de colección sin intermediarios, con entrega en 10 a 15 días.
                 Antes de cada despacho recibes una verificación en video HD de tu reloj exacto para tu
                 total conformidad.
@@ -183,24 +200,13 @@ export default function HomePage() {
                   Pedir un Modelo Específico por WhatsApp
                 </a>
               </div>
-            </div>
-
-            <div className="hero-frame hero-aura mx-auto w-full max-w-[19rem] lg:max-w-md">
-              <div className="hero-photo relative aspect-[4/5] overflow-hidden rounded-[6px] border border-line">
-                <WatchImage watch={HERO_WATCH} uid="hero" live />
-                <div aria-hidden="true" className="hero-glint" />
-              </div>
               <button
                 type="button"
                 onClick={() => setSelected(HERO_WATCH)}
-                className="mx-auto mt-3 block text-center text-sm text-ash transition-colors hover:text-accent"
+                className="hero-in hero-in-3 mt-9 block text-left text-sm text-ash transition-colors hover:text-accent"
               >
-                <span className="block text-bone">
-                  {HERO_WATCH.brand} {HERO_WATCH.model}
-                </span>
-                <span className="mt-1 block underline decoration-line underline-offset-4">
-                  Ref. {HERO_WATCH.reference}, ver ficha técnica
-                </span>
+                En la foto: <span className="text-bone">{HERO_WATCH.brand} {HERO_WATCH.collection}</span>.{" "}
+                <span className="underline decoration-line underline-offset-4">Ver ficha técnica</span>
               </button>
             </div>
           </div>
