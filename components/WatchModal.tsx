@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import { MessageCircle, Video, X } from "lucide-react";
 import type { Watch } from "@/data/watches";
 import { mediaLink, watchInquiryLink } from "@/lib/whatsapp";
@@ -120,6 +121,12 @@ export default function WatchModal({ watch, onClose }: WatchModalProps) {
               <p className="mt-3 text-center text-sm text-ash">
                 El mensaje de WhatsApp ya incluye la marca, el modelo y la referencia.
               </p>
+              <Link
+                href={`/reloj/${watch.id}`}
+                className="mt-4 self-center text-sm text-bone underline decoration-line underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
+              >
+                Abrir la página de esta pieza
+              </Link>
             </div>
           </div>
         </div>

@@ -25,7 +25,7 @@ export default function WatchImage({ watch, uid, live = false, className = "" }:
       <Image
         ref={imgRef}
         src={watch.image}
-        alt={`${watch.brand} ${watch.model}`}
+        alt={`${watch.brand} ${watch.model}, ref. ${watch.reference}`}
         fill
         unoptimized
         sizes="(min-width: 1280px) 25vw, (min-width: 640px) 50vw, 100vw"

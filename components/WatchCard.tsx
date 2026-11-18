@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { MessageCircle, Video } from "lucide-react";
 import type { Watch } from "@/data/watches";
 import { mediaLink, watchInquiryLink } from "@/lib/whatsapp";
@@ -36,13 +37,19 @@ export default function WatchCard({ watch, onOpen, index = 0 }: WatchCardProps) 
       <div className="flex flex-1 flex-col px-5 pb-5 pt-5">
         <p className="text-sm font-medium text-accent">{watch.brand}</p>
         <h3 className="mt-1 font-serif text-2xl leading-snug">
-          <button
-            type="button"
-            onClick={() => onOpen(watch)}
+          {/* Enlace real a la ficha (indexable); el clic normal abre la vista rápida. */}
+          <Link
+            href={`/reloj/${watch.id}`}
+            prefetch={false}
+            onClick={(e) => {
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+              e.preventDefault();
+              onOpen(watch);
+            }}
             className="text-left after:absolute after:inset-0 after:content-['']"
           >
             {watch.model}
-          </button>
+          </Link>
         </h3>
         <p className="mt-1.5 text-sm text-ash">
           Ref. {watch.reference} · {watch.dimensions}

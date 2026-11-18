@@ -6,6 +6,7 @@ import {
   Banknote,
   FileText,
   MessageCircle,
+  Plus,
   Send,
   ShieldCheck,
   Truck,
@@ -105,6 +106,45 @@ const REQUEST_STEPS = [
     text: "Verificas tu pieza en video HD antes del envío. Luego coordinamos la entrega en Quito o envío gratuito a tu ciudad.",
   },
 ];
+
+/** Preguntas frecuentes. También alimentan el JSON-LD `FAQPage`. */
+const FAQ = [
+  {
+    question: "¿Cómo funciona la compra y reserva de relojes en Quito y Ecuador?",
+    answer:
+      "Nos escribes por WhatsApp con la pieza que te interesa y un asesor confirma disponibilidad y cotización. Las piezas marcadas como Disponible en Boutique se coordinan para entrega en Quito o envío a tu ciudad; las de Bajo Reserva se gestionan en origen, con un tiempo estimado de 10 a 15 días. El pedido bajo gestión directa se confirma con el 100% del valor y puedes pagar por transferencia bancaria, depósito, efectivo en Quito o Western Union desde el exterior.",
+  },
+  {
+    question: "¿Qué movimientos y calibres trabajan en sus piezas de colección?",
+    answer:
+      "Cada ficha del catálogo indica el movimiento de la pieza (automático, cuerda manual o cuarzo), su calibre, la reserva de marcha y la hermeticidad. Antes del despacho compruebas la marcha del reloj en video y todos nuestros relojes incluyen 1 año de garantía mecánica.",
+  },
+  {
+    question: "¿Cómo funciona la verificación en video HD antes del despacho?",
+    answer:
+      "Antes de enviar tu reloj grabamos un video en alta definición de la pieza exacta que vas a recibir: esfera, bisel, cierre y marcha. Lo revisas con calma y solo cuando lo apruebas autorizamos el despacho. Los videos de control de calidad también se publican en nuestro canal de Telegram.",
+  },
+  {
+    question: "¿Realizan envíos asegurados a Guayaquil, Cuenca y otras provincias?",
+    answer:
+      "Sí. El envío es gratis y asegurado a todo Ecuador, incluidas Guayaquil, Cuenca y cualquier otra provincia. En Quito hacemos entrega personalizada. Los envíos internacionales se cotizan por destino vía WhatsApp.",
+  },
+  {
+    question: "¿Puedo solicitar un modelo o referencia específica que no esté en el catálogo?",
+    answer:
+      "Sí. Envíanos por WhatsApp una foto, un enlace o el número de referencia del reloj que buscas. Confirmamos disponibilidad en origen, te enviamos una cotización personalizada y el tiempo estimado de entrega (10 a 15 días), y verificas la pieza en video HD antes del envío.",
+  },
+];
+
+const FAQ_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map(({ question, answer }) => ({
+    "@type": "Question",
+    name: question,
+    acceptedAnswer: { "@type": "Answer", text: answer },
+  })),
+};
 
 export default function HomePage() {
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
@@ -332,7 +372,51 @@ export default function HomePage() {
             </ol>
           </div>
         </section>
+
+        {/* ======================== PREGUNTAS FRECUENTES ======================== */}
+        <section
+          id="preguntas"
+          aria-labelledby="preguntas-title"
+          className="mx-auto grid max-w-7xl gap-10 px-5 pb-20 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:gap-20 lg:px-8 lg:pb-28"
+        >
+          <div>
+            <h2 id="preguntas-title" className="reveal font-serif text-4xl md:text-5xl">
+              Preguntas Frecuentes
+            </h2>
+            <p className="mt-4 max-w-sm leading-relaxed text-ash">
+              Lo que más nos consultan antes de reservar una pieza en Quito y el resto de Ecuador.
+            </p>
+            <a
+              href={generalInquiryLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-outline mt-8"
+            >
+              <MessageCircle aria-hidden="true" className="h-4 w-4 shrink-0" />
+              Hacer otra Pregunta
+            </a>
+          </div>
+          <div className="border-t border-line">
+            {FAQ.map(({ question, answer }) => (
+              <details key={question} className="faq-item group border-b border-line">
+                <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-6 font-serif text-2xl leading-snug transition-colors hover:text-accent [&::-webkit-details-marker]:hidden">
+                  {question}
+                  <Plus
+                    aria-hidden="true"
+                    strokeWidth={1.5}
+                    className="mt-1 h-5 w-5 shrink-0 text-accent transition-transform duration-300 group-open:rotate-45 motion-reduce:transition-none"
+                  />
+                </summary>
+                <p className="max-w-[65ch] pb-7 pr-10 leading-relaxed text-ash">{answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
       </main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSON_LD) }}
+      />
 
       {/* ============================== PIE DE PÁGINA ============================== */}
       <footer className="border-t border-line">
@@ -362,6 +446,9 @@ export default function HomePage() {
             </a>
             <a href="#pedido-especial" className="transition-colors hover:text-accent">
               Pedido Especial
+            </a>
+            <a href="#preguntas" className="transition-colors hover:text-accent">
+              Preguntas Frecuentes
             </a>
             <a
               href={TELEGRAM_URL}
