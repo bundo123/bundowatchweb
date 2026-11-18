@@ -1,7 +1,7 @@
 import { DEFAULT_MEDIA_URL, type Watch } from "@/data/watches";
 
 export const WHATSAPP_NUMBER = "593987447806";
-export const TIKTOK_URL = "https://tiktok.com";
+export const TIKTOK_URL = "https://www.tiktok.com/@593watches";
 export const TIKTOK_LABEL = "TikTok (@593watches)";
 export const SHOP_NAME = "LUXSTOREC";
 

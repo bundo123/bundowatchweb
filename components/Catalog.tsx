@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { MessageCircle, Search, X } from "lucide-react";
-import { AVAILABILITIES, BRANDS, GENDERS, MOVEMENTS, WATCHES, type Watch } from "@/data/watches";
+import { ACTIVE_BRANDS, AVAILABILITIES, GENDERS, MOVEMENTS, WATCHES, type Watch } from "@/data/watches";
 import {
   EMPTY_FILTERS,
   SORT_OPTIONS,
@@ -85,7 +85,7 @@ export default function Catalog({ filters, onChange, onOpen }: CatalogProps) {
           >
             Todas
           </Chip>
-          {BRANDS.map(({ name }) => (
+          {ACTIVE_BRANDS.map(({ name }) => (
             <Chip
               key={name}
               active={filters.brands.includes(name)}
@@ -146,7 +146,7 @@ export default function Catalog({ filters, onChange, onOpen }: CatalogProps) {
           <button
             type="button"
             onClick={() => onChange({ ...filters, collection: null })}
-            className="flex items-center gap-2 rounded-[3px] border border-champagne/50 bg-champagne/10 px-3 py-1.5 text-sm text-champagne"
+            className="flex items-center gap-2 rounded-[3px] border border-accent/50 bg-accent/10 px-3 py-1.5 text-sm text-accent"
           >
             Colección: {filters.collection}
             <X aria-hidden="true" className="h-3.5 w-3.5" />
@@ -157,14 +157,39 @@ export default function Catalog({ filters, onChange, onOpen }: CatalogProps) {
           <button
             type="button"
             onClick={clearAll}
-            className="text-sm text-bone underline decoration-line underline-offset-4 transition-colors hover:text-champagne hover:decoration-champagne"
+            className="text-sm text-bone underline decoration-line underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
           >
             Limpiar filtros
           </button>
         )}
       </div>
 
-      {results.length > 0 ? (
+      {results.length > 0 && sort === "default" ? (
+        /* Orden por defecto: un bloque por casa relojera, con su título. */
+        <div>
+          {ACTIVE_BRANDS.map((brand) => ({
+            ...brand,
+            items: results.filter((w) => w.brand === brand.name),
+          }))
+            .filter((group) => group.items.length > 0)
+            .map((group) => (
+              <section key={group.name} aria-label={group.name} className="mt-14 first:mt-8">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-line pb-4">
+                  <h3 className="font-serif text-3xl md:text-4xl">{group.name}</h3>
+                  <p className="eyebrow">
+                    {group.tagline ? `${group.tagline} · ` : ""}
+                    {group.items.length} {group.items.length === 1 ? "pieza" : "piezas"}
+                  </p>
+                </div>
+                <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {group.items.map((watch, i) => (
+                    <WatchCard key={watch.id} watch={watch} onOpen={onOpen} index={i} />
+                  ))}
+                </div>
+              </section>
+            ))}
+        </div>
+      ) : results.length > 0 ? (
         <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {results.map((watch, i) => (
             <WatchCard key={watch.id} watch={watch} onOpen={onOpen} index={i} />
@@ -180,7 +205,7 @@ export default function Catalog({ filters, onChange, onOpen }: CatalogProps) {
             <button type="button" onClick={clearAll} className="btn btn-outline">
               Limpiar filtros
             </button>
-            <a href={customQuoteLink} target="_blank" rel="noopener noreferrer" className="btn btn-gold">
+            <a href={customQuoteLink} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
               <MessageCircle aria-hidden="true" className="h-4 w-4" />
               Pedir un Modelo por WhatsApp
             </a>
@@ -216,7 +241,7 @@ function Chip({
       onClick={onClick}
       className={`rounded-[3px] border px-3 py-2 text-sm transition-colors ${
         active
-          ? "border-champagne bg-champagne font-semibold text-obsidian"
+          ? "border-accent bg-accent font-semibold text-obsidian"
           : "border-line text-bone/85 hover:border-ash hover:text-bone"
       }`}
     >

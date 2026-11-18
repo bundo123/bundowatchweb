@@ -16,7 +16,7 @@ export default function WatchCard({ watch, onOpen, index = 0 }: WatchCardProps) 
   return (
     <article
       style={{ animationDelay: `${Math.min(index, 11) * 45}ms` }}
-      className="card-in group relative flex flex-col overflow-hidden rounded-[4px] border border-line bg-carbon transition-colors duration-300 hover:border-champagne/40"
+      className="card-in group relative flex flex-col overflow-hidden rounded-[4px] border border-line bg-carbon transition-colors duration-300 hover:border-accent/40"
     >
       <div className="watch-stage relative aspect-[4/5] overflow-hidden">
         <div
@@ -34,8 +34,8 @@ export default function WatchCard({ watch, onOpen, index = 0 }: WatchCardProps) 
       </div>
 
       <div className="flex flex-1 flex-col px-5 pb-5 pt-5">
-        <p className="text-sm font-medium text-champagne">{watch.brand}</p>
-        <h3 className="mt-1 font-serif text-xl leading-snug">
+        <p className="text-sm font-medium text-accent">{watch.brand}</p>
+        <h3 className="mt-1 font-serif text-2xl leading-snug">
           <button
             type="button"
             onClick={() => onOpen(watch)}
@@ -56,7 +56,7 @@ export default function WatchCard({ watch, onOpen, index = 0 }: WatchCardProps) 
           href={watchInquiryLink(watch)}
           target="_blank"
           rel="noopener noreferrer"
-          className="btn btn-gold relative z-10 mt-3 w-full"
+          className="btn btn-primary relative z-10 mt-3 w-full"
         >
           <MessageCircle aria-hidden="true" className="h-4 w-4 shrink-0" />
           Consultar con un Asesor

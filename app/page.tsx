@@ -6,6 +6,7 @@ import {
   Banknote,
   FileText,
   MessageCircle,
+  Send,
   ShieldCheck,
   Truck,
   Video,
@@ -15,7 +16,7 @@ import Logo from "@/components/Logo";
 import Navbar from "@/components/Navbar";
 import WatchImage from "@/components/WatchArt";
 import WatchModal from "@/components/WatchModal";
-import { WATCHES, type Watch } from "@/data/watches";
+import { TELEGRAM_URL, WATCHES, type Watch } from "@/data/watches";
 import { EMPTY_FILTERS, type Filters } from "@/lib/filters";
 import {
   TIKTOK_LABEL,
@@ -25,6 +26,22 @@ import {
 } from "@/lib/whatsapp";
 
 const HERO_WATCH = WATCHES[0];
+
+/** Casas relojeras disponibles bajo pedido, mostradas en el bloque de Telegram. */
+const TELEGRAM_BRANDS = [
+  "Rolex",
+  "Omega",
+  "Patek Philippe",
+  "Audemars Piguet",
+  "Cartier",
+  "Tudor",
+  "TAG Heuer",
+  "Breitling",
+  "IWC",
+  "Richard Mille",
+  "Panerai",
+  "Hublot",
+];
 
 const PILLARS = [
   {
@@ -117,17 +134,26 @@ export default function HomePage() {
 
   return (
     <>
+      {/* Apertura: telón con la firma que se retira al cargar (solo CSS, ver globals.css). */}
+      <div aria-hidden="true" className="intro-curtain">
+        <span className="intro-mark">LUXSTOREC</span>
+        <span className="intro-rule" />
+      </div>
+
       <Navbar onPick={pickFromMenu} />
 
       <main>
         {/* ============================== PORTADA ============================== */}
-        <section id="inicio" className="overflow-hidden pt-16">
+        <section id="inicio" className="hero-bg overflow-hidden pt-16">
           <div className="mx-auto grid max-w-7xl items-center gap-x-10 gap-y-6 px-5 pb-16 pt-14 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:px-8 lg:pb-24 lg:pt-20">
             <div>
-              <h1 className="hero-title font-serif text-[clamp(2.75rem,7.2vw,5.75rem)] leading-[1.03] tracking-[-0.015em]">
+              <p className="eyebrow hero-in mb-6">Boutique privada · Quito, Ecuador</p>
+              <h1 className="hero-title font-serif text-[clamp(3.1rem,8vw,6.75rem)] leading-[0.98] tracking-[-0.02em]">
                 {"Alta Relojería Sin Sobreprecios".split(" ").flatMap((word, i) => [
                   <span key={`${word}-${i}`} className="hero-word">
-                    <span style={{ animationDelay: `${120 + i * 95}ms` }}>{word}</span>
+                    <span className={i >= 2 ? "italic" : undefined} style={{ animationDelay: `${1150 + i * 110}ms` }}>
+                      {word}
+                    </span>
                   </span>,
                   " ",
                 ])}
@@ -138,8 +164,14 @@ export default function HomePage() {
                 total conformidad.
               </p>
               <div className="hero-in hero-in-3 mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <a href="#catalogo" className="btn btn-gold">
-                  Explorar Catálogo
+                <a
+                  href={TELEGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary"
+                >
+                  <Send aria-hidden="true" className="h-4 w-4 shrink-0" />
+                  Ver Videos de Control de Calidad
                 </a>
                 <a
                   href={customQuoteLink}
@@ -153,7 +185,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="hero-in hero-in-2 hero-aura mx-auto w-full max-w-[19rem] lg:max-w-md">
+            <div className="hero-frame hero-aura mx-auto w-full max-w-[19rem] lg:max-w-md">
               <div className="hero-photo relative aspect-[4/5] overflow-hidden rounded-[6px] border border-line">
                 <WatchImage watch={HERO_WATCH} uid="hero" live />
                 <div aria-hidden="true" className="hero-glint" />
@@ -161,7 +193,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => setSelected(HERO_WATCH)}
-                className="mx-auto mt-3 block text-center text-sm text-ash transition-colors hover:text-champagne"
+                className="mx-auto mt-3 block text-center text-sm text-ash transition-colors hover:text-accent"
               >
                 <span className="block text-bone">
                   {HERO_WATCH.brand} {HERO_WATCH.model}
@@ -179,11 +211,49 @@ export default function HomePage() {
           <div className="mx-auto grid max-w-7xl divide-y divide-line px-5 md:grid-cols-3 md:divide-x md:divide-y-0 lg:px-8">
             {PILLARS.map(({ icon: Icon, title, text }) => (
               <div key={title} className="reveal py-9 md:px-8 md:py-12 md:first:pl-0 md:last:pr-0">
-                <Icon aria-hidden="true" strokeWidth={1.5} className="h-7 w-7 text-champagne" />
-                <h2 className="mt-5 font-serif text-xl leading-snug">{title}</h2>
+                <Icon aria-hidden="true" strokeWidth={1.5} className="h-7 w-7 text-accent" />
+                <h2 className="mt-5 font-serif text-2xl leading-snug">{title}</h2>
                 <p className="mt-3 leading-relaxed text-ash">{text}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* ===================== CATÁLOGO COMPLETO EN TELEGRAM ===================== */}
+        <section aria-labelledby="telegram-title" className="px-5 pt-20 lg:px-8 lg:pt-28">
+          <div className="reveal telegram-panel mx-auto grid max-w-7xl gap-12 rounded-[4px] border border-line px-6 py-12 md:px-14 md:py-16 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-20">
+            <div>
+              <p className="eyebrow">Canal privado en Telegram</p>
+              <h2 id="telegram-title" className="mt-5 font-serif text-4xl leading-[1.06] md:text-5xl">
+                Mira nuestro catálogo completo y videos de control de calidad
+              </h2>
+              <p className="mt-6 max-w-lg text-lg leading-relaxed text-ash">
+                En el canal publicamos los videos reales de cada pieza antes del despacho y todas
+                las referencias que gestionamos bajo pedido.
+              </p>
+              <a
+                href={TELEGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary mt-9"
+              >
+                <Send aria-hidden="true" className="h-4 w-4 shrink-0" />
+                Abrir el Canal de Telegram
+              </a>
+            </div>
+            <div>
+              <p className="eyebrow">Casas relojeras disponibles</p>
+              <ul className="mt-5 grid grid-cols-2 border-l border-t border-line sm:grid-cols-3">
+                {TELEGRAM_BRANDS.map((brand) => (
+                  <li
+                    key={brand}
+                    className="border-b border-r border-line px-4 py-5 font-serif text-[1.35rem] leading-tight"
+                  >
+                    {brand}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
@@ -192,6 +262,7 @@ export default function HomePage() {
 
         {/* ========================= COMPRA Y ENVÍOS ========================= */}
         <section id="compra" className="mx-auto max-w-7xl px-5 pb-20 lg:px-8 lg:pb-28">
+          <p className="eyebrow mb-4">Servicio</p>
           <h2 className="reveal font-serif text-4xl md:text-5xl">Compra y Envíos</h2>
           <p className="mt-4 max-w-2xl leading-relaxed text-ash">
             Atención personalizada desde Quito para todo el país: confirmas disponibilidad, eliges tu
@@ -200,14 +271,14 @@ export default function HomePage() {
           <div className="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {PURCHASE_INFO.map(({ icon: Icon, title, items }) => (
               <div key={title} className="reveal rounded-[4px] border border-line bg-carbon p-6">
-                <Icon aria-hidden="true" strokeWidth={1.5} className="h-7 w-7 text-champagne" />
-                <h3 className="mt-5 font-serif text-xl">{title}</h3>
+                <Icon aria-hidden="true" strokeWidth={1.5} className="h-7 w-7 text-accent" />
+                <h3 className="mt-5 font-serif text-2xl">{title}</h3>
                 <ul className="mt-4 space-y-2.5 leading-relaxed text-ash">
                   {items.map((item) => (
                     <li key={item} className="flex gap-2.5">
                       <span
                         aria-hidden="true"
-                        className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-champagne"
+                        className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-accent"
                       />
                       {item}
                     </li>
@@ -220,7 +291,7 @@ export default function HomePage() {
 
         {/* ========================== PEDIDO ESPECIAL ========================== */}
         <section id="pedido-especial" className="px-5 pb-20 lg:px-8 lg:pb-28">
-          <div className="reveal mx-auto grid max-w-7xl gap-12 rounded-[6px] border border-champagne/35 bg-carbon px-6 py-12 md:px-14 md:py-16 lg:grid-cols-2 lg:gap-20">
+          <div className="reveal mx-auto grid max-w-7xl gap-12 rounded-[6px] border border-accent/35 bg-carbon px-6 py-12 md:px-14 md:py-16 lg:grid-cols-2 lg:gap-20">
             <div>
               <h2 className="font-serif text-4xl leading-[1.1] md:text-5xl">
                 ¿Buscas una referencia que no ves en catálogo?
@@ -233,7 +304,7 @@ export default function HomePage() {
                 href={customQuoteLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-gold mt-9"
+                className="btn btn-primary mt-9"
               >
                 <MessageCircle aria-hidden="true" className="h-4 w-4 shrink-0" />
                 Enviar Foto o Nombre por WhatsApp
@@ -243,7 +314,7 @@ export default function HomePage() {
             <ol className="divide-y divide-line border-y border-line">
               {REQUEST_STEPS.map((step, i) => (
                 <li key={step.title} className="grid grid-cols-[2.75rem_minmax(0,1fr)] gap-4 py-6">
-                  <span aria-hidden="true" className="font-serif text-3xl leading-none text-champagne">
+                  <span aria-hidden="true" className="font-serif text-3xl leading-none text-accent">
                     {i + 1}
                   </span>
                   <div>
@@ -266,22 +337,39 @@ export default function HomePage() {
               LUXSTOREC
             </p>
             <p className="mt-2">Firma privada de relojería de colección. Quito, Ecuador.</p>
+            <p className="mt-2 text-xs">
+              Imágenes referenciales.{" "}
+              <a
+                href="/relojes/creditos.txt"
+                className="underline decoration-line underline-offset-4 transition-colors hover:text-accent"
+              >
+                Créditos de las fotos
+              </a>
+            </p>
           </div>
           <nav aria-label="Pie de página" className="flex flex-wrap gap-x-7 gap-y-2">
-            <a href="#catalogo" className="transition-colors hover:text-champagne">
+            <a href="#catalogo" className="transition-colors hover:text-accent">
               Catálogo
             </a>
-            <a href="#compra" className="transition-colors hover:text-champagne">
+            <a href="#compra" className="transition-colors hover:text-accent">
               Compra y Envíos
             </a>
-            <a href="#pedido-especial" className="transition-colors hover:text-champagne">
+            <a href="#pedido-especial" className="transition-colors hover:text-accent">
               Pedido Especial
+            </a>
+            <a
+              href={TELEGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-accent"
+            >
+              Telegram
             </a>
             <a
               href={TIKTOK_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-champagne"
+              className="transition-colors hover:text-accent"
             >
               {TIKTOK_LABEL}
             </a>
@@ -289,7 +377,7 @@ export default function HomePage() {
               href={customQuoteLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors hover:text-champagne"
+              className="transition-colors hover:text-accent"
             >
               WhatsApp
             </a>
@@ -303,7 +391,7 @@ export default function HomePage() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Contactar a LUXSTOREC por WhatsApp"
-        className="fixed bottom-5 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-champagne text-obsidian shadow-lg shadow-black/50 transition-transform hover:scale-105"
+        className="fixed bottom-5 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-accent text-obsidian shadow-lg shadow-black/50 transition-transform hover:scale-105"
       >
         <MessageCircle aria-hidden="true" className="h-6 w-6" />
       </a>

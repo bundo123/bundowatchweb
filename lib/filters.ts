@@ -1,4 +1,4 @@
-import type { Availability, Gender, Movement, Watch } from "@/data/watches";
+import { ACTIVE_BRANDS, type Availability, type Gender, type Movement, type Watch } from "@/data/watches";
 
 export interface Filters {
   brands: string[];
@@ -41,9 +41,9 @@ export function toggle<T>(list: T[], value: T): T[] {
 }
 
 export const SORT_OPTIONS = [
-  { key: "default", label: "Orden del catálogo" },
+  { key: "default", label: "Agrupado por casa relojera" },
   { key: "name", label: "Modelo: A a Z" },
-  { key: "brand", label: "Casa relojera: A a Z" },
+  { key: "brand", label: "Casa relojera: A a Z (lista continua)" },
 ] as const;
 export type SortKey = (typeof SORT_OPTIONS)[number]["key"];
 
@@ -65,6 +65,11 @@ export function matchesSearch(watch: Watch, query: string): boolean {
 
 export function sortWatches(watches: Watch[], sort: SortKey): Watch[] {
   const sorted = [...watches];
+  if (sort === "default") {
+    // Agrupa por casa relojera en el orden del menú, sin alterar el orden interno.
+    const order = new Map(ACTIVE_BRANDS.map((b, i) => [b.name, i]));
+    sorted.sort((a, b) => (order.get(a.brand) ?? 999) - (order.get(b.brand) ?? 999));
+  }
   if (sort === "name") {
     sorted.sort((a, b) => a.model.localeCompare(b.model, "es"));
   }

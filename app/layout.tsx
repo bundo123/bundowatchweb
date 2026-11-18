@@ -1,12 +1,14 @@
-import type { Metadata } from "next";
-import { Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
-import { WATCHES } from "@/data/watches";
+import type { Metadata, Viewport } from "next";
+import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google";
+import { TELEGRAM_URL, WATCHES } from "@/data/watches";
 import { TIKTOK_URL, WHATSAPP_NUMBER } from "@/lib/whatsapp";
 import "./globals.css";
 
-const playfair = Playfair_Display({
+const display = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -18,15 +20,31 @@ const jakarta = Plus_Jakarta_Sans({
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://luxstorec.vercel.app";
 
+const OG_IMAGE = "/relojes/rolex-submariner-126610ln.jpg";
+
+export const viewport: Viewport = {
+  themeColor: "#0a0d0c",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "LUXSTOREC | Relojes de Lujo y Colección en Quito, Ecuador",
+    default: "LUXSTOREC | Venta de Relojes de Alta Relojería en Quito, Ecuador",
     template: "%s | LUXSTOREC Ecuador",
   },
   description:
-    "Firma privada de alta relojería en Quito, Ecuador. Rolex, Cartier, Omega, Patek Philippe y Audemars Piguet sin sobreprecios, con verificación en video HD antes del envío y envío gratis a todo el país.",
+    "Venta de relojes de alta relojería en Quito y todo Ecuador: Rolex, Omega, Cartier, Patek Philippe, Audemars Piguet, Tudor, TAG Heuer y Breitling sin sobreprecios. Video de control de calidad antes del despacho y envíos seguros a nivel nacional.",
   keywords: [
+    "venta de relojes Quito",
+    "venta de relojes de lujo Ecuador",
+    "alta relojería Quito",
+    "alta relojería Ecuador",
+    "relojes originales Quito",
+    "envío de relojes a todo Ecuador",
+    "TAG Heuer Ecuador",
+    "Breitling Navitimer Ecuador",
+    "Tudor Black Bay Quito",
+    "Hublot Ecuador",
     "relojes de lujo Ecuador",
     "relojes de colección Quito",
     "comprar Rolex Quito",
@@ -47,15 +65,21 @@ export const metadata: Metadata = {
     locale: "es_EC",
     url: SITE_URL,
     siteName: "LUXSTOREC",
-    title: "LUXSTOREC | Alta Relojería Sin Sobreprecios en Ecuador",
+    title: "LUXSTOREC | Alta Relojería Sin Sobreprecios en Quito y Ecuador",
     description:
-      "Catálogo privado de relojería de colección en Quito. Gestión directa, verificación en video HD antes del envío y entregas gratuitas en todo Ecuador.",
+      "Venta de relojes de alta relojería en Quito con envíos seguros a todo Ecuador. Gestión directa y video de control de calidad antes del despacho.",
+    images: [{ url: OG_IMAGE, width: 800, height: 1000, alt: "Reloj de buceo de acero con esfera negra" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "LUXSTOREC | Alta Relojería en Quito, Ecuador",
     description:
-      "Rolex, Cartier, Omega, Patek Philippe y Audemars Piguet bajo gestión directa con inspección en video HD.",
+      "Venta de relojes de alta relojería en Quito con envíos seguros a todo Ecuador e inspección en video antes del despacho.",
+    images: [OG_IMAGE],
+  },
+  other: {
+    "geo.region": "EC-P",
+    "geo.placename": "Quito",
   },
   robots: {
     index: true,
@@ -75,8 +99,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     "@type": "JewelryStore",
     name: "LUXSTOREC",
     description:
-      "Firma privada de relojería de colección en Quito, Ecuador. Gestión directa sin sobreprecios con verificación en video HD antes del envío.",
+      "Venta de relojes de alta relojería en Quito, Ecuador. Gestión directa sin sobreprecios, video de control de calidad antes del despacho y envíos seguros a nivel nacional.",
     url: SITE_URL,
+    image: `${SITE_URL}${OG_IMAGE}`,
     telephone: `+${WHATSAPP_NUMBER}`,
     address: {
       "@type": "PostalAddress",
@@ -88,7 +113,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       "@type": "Country",
       name: "Ecuador",
     },
-    sameAs: [TIKTOK_URL, `https://wa.me/${WHATSAPP_NUMBER}`],
+    sameAs: [TIKTOK_URL, TELEGRAM_URL, `https://wa.me/${WHATSAPP_NUMBER}`],
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Catálogo de Alta Relojería LUXSTOREC",
@@ -107,7 +132,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <html lang="es" className={`${playfair.variable} ${jakarta.variable}`}>
+    <html lang="es" className={`${display.variable} ${jakarta.variable}`}>
       <head>
         <script
           type="application/ld+json"

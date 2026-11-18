@@ -54,7 +54,7 @@ export default function WatchModal({ watch, onClose }: WatchModalProps) {
               type="button"
               onClick={onClose}
               aria-label="Cerrar"
-              className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-line bg-obsidian/80 text-ash transition-colors hover:border-champagne hover:text-champagne"
+              className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-line bg-obsidian/80 text-ash transition-colors hover:border-accent hover:text-accent"
             >
               <X aria-hidden="true" className="h-5 w-5" />
             </button>
@@ -76,7 +76,7 @@ export default function WatchModal({ watch, onClose }: WatchModalProps) {
 
             <div className="flex flex-col px-6 pb-7 pt-7 md:px-10 md:pb-8 md:pt-9">
               <AvailabilityTag availability={watch.availability} className="self-start" />
-              <p className="mt-5 text-sm font-medium text-champagne">
+              <p className="mt-5 text-sm font-medium text-accent">
                 {watch.brand}
                 {watch.nickname && <span className="text-ash"> · &ldquo;{watch.nickname}&rdquo;</span>}
               </p>
@@ -85,7 +85,7 @@ export default function WatchModal({ watch, onClose }: WatchModalProps) {
               </h2>
               <p className="mt-4 max-w-prose leading-relaxed text-ash">{watch.description}</p>
 
-              <p className="mt-6 text-base font-medium text-champagne">
+              <p className="mt-6 text-base font-medium text-accent">
                 Consultar con un asesor
               </p>
 
@@ -103,7 +103,7 @@ export default function WatchModal({ watch, onClose }: WatchModalProps) {
                 href={watchInquiryLink(watch)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-gold mt-6 w-full"
+                className="btn btn-primary mt-6 w-full"
               >
                 <MessageCircle aria-hidden="true" className="h-5 w-5 shrink-0" />
                 Consultar con un Asesor
